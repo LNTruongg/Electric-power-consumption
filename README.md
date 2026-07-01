@@ -1,10 +1,16 @@
 # Household Electric Power Consumption Forecasting
 
-## Overview
+## 📌 Overview
 
-This project develops an end-to-end deep learning pipeline for forecasting household electricity consumption using a stacked Bidirectional Long Short-Term Memory (Bi-LSTM) network. The proposed approach combines advanced data preprocessing, feature engineering, and hyperparameter optimization to improve forecasting accuracy on real-world household energy data.
+Household electricity consumption forecasting is a challenging time series problem due to its highly nonlinear behavior, stochastic fluctuations, seasonal patterns, and long-term temporal dependencies. Accurate short-term load forecasting plays an essential role in smart grids, demand response systems, and residential energy management.
 
-Household electricity consumption is highly nonlinear and affected by stochastic fluctuations, seasonal patterns, and long-term temporal dependencies. The objective of this project is to predict **Global Active Power** one hour ahead while maintaining high predictive accuracy and efficient inference suitable for practical deployment.
+This project presents an end-to-end deep learning pipeline for **one-hour-ahead household electricity consumption forecasting** using a **Stacked Bidirectional Long Short-Term Memory (Bi-LSTM)** network. The proposed framework is built on the **Individual Household Electric Power Consumption (IHEPC)** dataset containing over **2 million measurements** collected between 2006 and 2010.
+
+To improve forecasting performance, the pipeline incorporates an advanced preprocessing workflow, including **Interquartile Range (IQR)** outlier removal, **Exponential Weighted Moving Average (EWMA)** denoising, and temporal feature engineering through lag features (1-hour, 24-hour, and 168-hour). A stacked Bi-LSTM architecture is then trained to effectively capture both short-term and long-term temporal dependencies in household electricity consumption.
+
+Experimental results demonstrate that the proposed model significantly outperforms a baseline LSTM model, achieving an **R² score of 0.6688** and an **RMSE of 0.3877 kW**, representing approximately **25.5% improvement in prediction accuracy**. The Bidirectional LSTM architecture effectively mitigates phase lag, while the preprocessing and feature engineering techniques substantially reduce prediction errors.
+
+The resulting forecasting framework provides an efficient and practical solution for **smart grid applications**, **demand response**, and **home energy management systems**, offering high predictive accuracy with computational efficiency suitable for real-world deployment.
 
 ---
 
