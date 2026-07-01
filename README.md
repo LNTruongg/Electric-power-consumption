@@ -1,178 +1,241 @@
-# ⚡ Household Electric Power Consumption Forecasting
-## 🚀 Stacked Bidirectional LSTM with Advanced Feature Engineering
+# Household Electric Power Consumption Forecasting
 
-## 📌 Overview
+## Overview
 
-This project presents an end-to-end time series forecasting pipeline for predicting household electricity consumption using a Stacked Bidirectional LSTM architecture combined with advanced preprocessing and feature engineering techniques.
+This project develops an end-to-end deep learning pipeline for forecasting household electricity consumption using a stacked Bidirectional Long Short-Term Memory (Bi-LSTM) network. The proposed approach combines advanced data preprocessing, feature engineering, and hyperparameter optimization to improve forecasting accuracy on real-world household energy data.
 
-Unlike traditional approaches, this work tackles the high variance, stochastic noise, and multi-scale temporal patterns inherent in household-level energy data.
+Household electricity consumption is highly nonlinear and affected by stochastic fluctuations, seasonal patterns, and long-term temporal dependencies. The objective of this project is to predict **Global Active Power** one hour ahead while maintaining high predictive accuracy and efficient inference suitable for practical deployment.
 
-🎯 **Goal:** Predict **Global Active Power (kW)** 1 hour ahead with high accuracy and production-ready performance.
+---
 
-## 🧠 Key Highlights
+# Dataset
 
-- 🔥 **Stacked Bidirectional LSTM** → captures both forward & backward temporal dependencies
-- 🧹 **Advanced preprocessing pipeline** → reduces noise & improves signal quality
-- 🧩 **Feature engineering (lag + temporal)** → injects domain knowledge into the model
-- ⚙️ **Optuna hyperparameter tuning** → automated model optimization
-- 📊 **Production-ready evaluation** → includes economic impact (electric bill error)
+**Source:** UCI Individual Household Electric Power Consumption Dataset
 
-## 📂 Dataset
+**Time Period:** December 2006 – November 2010
 
-- 📦 **Source:** UCI Machine Learning Repository
-- 📅 **Period:** 2006 – 2010
-- 📊 **Size:** ~2M records (resampled to hourly)
+**Original Size:** Approximately 2 million minute-level observations
 
-### Main Features
+The dataset was resampled to hourly intervals before model development.
 
-- `Global_active_power` (target)
-- `Voltage`, `Global_intensity`
-- `Sub_metering_1/2/3` (appliance-level usage)
+### Input Variables
 
-After preprocessing: **12 features total**
+- Global Active Power (target)
+- Voltage
+- Global Intensity
+- Sub Metering 1
+- Sub Metering 2
+- Sub Metering 3
 
-## 🔧 Data Pipeline
+After feature engineering, the final dataset contains **12 input features**.
 
-### 1. 🧹 Outlier Removal (IQR)
-- Detect anomalies using Interquartile Range
-- Replace with NaN → interpolate
+---
 
-### 2. 🌊 Denoising (EWMA)
-- Exponential smoothing (`α = 0.9`)
-- Removes high-frequency noise
+# Data Preprocessing
 
-### 3. 🧠 Feature Engineering
+A comprehensive preprocessing pipeline was designed to improve data quality and increase the predictive capability of the model.
 
-**Lag features:**
-- `lag_1h`
-- `lag_24h`
-- `lag_168h`
+## Outlier Detection
 
-**Temporal features:**
-- Hour
-- Day of Week
+Outliers were detected using the Interquartile Range (IQR) method. Abnormal values were replaced with missing values and reconstructed through interpolation to preserve temporal continuity.
+
+## Noise Reduction
+
+Exponential Weighted Moving Average (EWMA) smoothing was applied with a smoothing factor of **0.9** to suppress high-frequency fluctuations while retaining long-term trends.
+
+## Feature Engineering
+
+### Lag Features
+
+Historical consumption values were incorporated to capture temporal dependencies.
+
+- Previous 1 hour
+- Previous 24 hours
+- Previous 168 hours (one week)
+
+### Temporal Features
+
+Additional calendar-based features were introduced.
+
+- Hour of day
+- Day of week
 - Month
 
-### 4. 📏 Scaling
-- MinMax scaling for both `X` and `y`
+## Feature Scaling
 
-### 5. 🪟 Sliding Window
-- Input shape: `(168 timesteps × 12 features)`
-- Predict: `t + 1 hour`
+Both input features and target values were normalized using Min-Max Scaling before training.
 
-## 🏗️ Model Architecture
+## Sliding Window
+
+Each training sample consists of:
+
+- Input: 168 consecutive hourly observations
+- Output: Global Active Power one hour ahead
+
+**Input Shape**
+
+```
+(168, 12)
+```
+
+---
+
+# Model Architecture
+
+The forecasting model consists of two stacked Bidirectional LSTM layers followed by a fully connected output layer.
 
 ```text
 Input (168 × 12)
-↓
-BiLSTM (128 units, return_sequences=True)
-↓
+        │
+        ▼
+Bidirectional LSTM (128 units)
+(return_sequences=True)
+        │
+        ▼
 Dropout (0.1)
-↓
-BiLSTM (64 units)
-↓
+        │
+        ▼
+Bidirectional LSTM (64 units)
+        │
+        ▼
 Dropout (0.1)
-↓
+        │
+        ▼
 Dense (1)
 ```
 
-### ⚡ Why Bidirectional LSTM?
+The network contains approximately **1.2 million trainable parameters**.
 
-- Reduces phase lag (common in standard LSTM)
-- Learns richer temporal representations
+Bidirectional LSTM was selected because it learns richer temporal representations than a standard LSTM and helps reduce prediction lag.
 
-### 🧮 Total Parameters
+---
 
-- ~1.2 million
-
-## ⚙️ Training Configuration
+# Training Configuration
 
 | Parameter | Value |
-|---|---|
+|-----------|-------|
 | Optimizer | Adamax |
 | Learning Rate | 0.002 |
 | Batch Size | 32 |
 | Epochs | 80 |
-| Early Stopping | patience = 15 |
+| Early Stopping | Patience = 15 |
 
-### 🔍 Hyperparameter Tuning
+---
 
-- **Tool:** Optuna
-- **Trials:** 150
-- **Method:** Bayesian Optimization
+# Hyperparameter Optimization
 
-## 📊 Evaluation Metrics
+Model hyperparameters were optimized using **Optuna** with Bayesian Optimization.
 
-- RMSE (kW)
-- MAE (kW)
-- R² Score
+| Setting | Value |
+|---------|------|
+| Optimization Library | Optuna |
+| Number of Trials | 150 |
+| Search Method | Bayesian Optimization |
 
-## 🏆 Results
+---
 
-### 📈 Model Performance
+# Evaluation Metrics
+
+Model performance was evaluated using the following regression metrics.
+
+- Root Mean Squared Error (RMSE)
+- Mean Absolute Error (MAE)
+- Coefficient of Determination (R²)
+
+---
+
+# Experimental Results
+
+## Performance Comparison
 
 | Metric | Baseline LSTM | Proposed Model | Improvement |
-|---|---:|---:|---:|
+|---------|--------------:|---------------:|------------:|
 | R² | 0.5330 | 0.6688 | +25.5% |
 | RMSE | 0.4976 kW | 0.3877 kW | -22.1% |
 | MAE | 0.3545 kW | 0.2738 kW | -22.7% |
 
-👉 The stacked Bi-LSTM significantly improves predictive accuracy
+The proposed stacked Bidirectional LSTM consistently outperformed the baseline LSTM across all evaluation metrics.
 
-## 💡 Ablation Study (Insight 🔥)
+---
+
+# Ablation Study
+
+The contribution of each component was evaluated through an ablation study.
 
 | Configuration | R² |
-|---|---:|
-| Baseline | 0.5330 |
+|--------------|---:|
+| Baseline LSTM | 0.5330 |
 | + EWMA | 0.5621 |
 | + Lag Features | 0.5987 |
-| + Full Features | 0.6214 |
-| + BiLSTM | 0.6688 |
+| + Feature Engineering | 0.6214 |
+| + Stacked Bidirectional LSTM | 0.6688 |
 
-➡️ Each component contributes meaningfully to performance
+The results show that every stage of the proposed pipeline contributes to improving forecasting performance.
 
-## 💰 Real-World Impact
+---
 
-- 📊 Total prediction error: **0.86%**
-- 💸 Billing difference: **~175,000 VND**
+# Practical Evaluation
 
-👉 Extremely practical for:
+To assess practical usefulness, prediction errors were translated into estimated electricity billing differences.
+
+- Total prediction error: **0.86%**
+- Estimated billing difference: **approximately 175,000 VND**
+
+These results demonstrate that the model is suitable for applications such as:
+
 - Smart homes
-- Energy optimization
+- Residential energy management
 - Demand response systems
+- Energy consumption optimization
 
-## 🧪 Validation Strategy
+---
 
-- TimeSeries Split (no leakage)
+# Validation Strategy
+
+To prevent data leakage, the following validation strategy was adopted.
+
+- TimeSeriesSplit
 - Walk-forward validation
-- 24h gap (purged CV)
+- Purged cross-validation with a 24-hour gap
 
-## ⚡ Production Readiness
+---
+
+# Deployment Considerations
 
 | Metric | Value |
-|---|---|
+|---------|------|
 | Inference Time | 1.2 ms/sample |
-| Model Size | ~1.18M params |
-| Accuracy | <1% MAPE |
+| Model Size | ~1.18M parameters |
+| MAPE | < 1% |
 
-✔️ Suitable for real-time deployment
+The model achieves low-latency inference while maintaining high forecasting accuracy, making it suitable for real-time deployment.
 
-## 🧠 Key Learnings
+---
 
-- 📌 Feature engineering > model complexity (in early stages)
-- 📌 Noise reduction is critical for time series
-- 📌 Bidirectional models reduce prediction lag
-- 📌 Deep learning works best when combined with domain knowledge
+# Key Findings
 
-## 🚀 Future Work
+The main observations from this project include:
 
-- 🔄 Multi-step forecasting (24h / 7 days ahead)
-- 🌦️ Add external features (weather, occupancy)
-- ⚡ Transformer-based models (Temporal Fusion Transformer)
-- 🧩 Hybrid models (CNN + LSTM + Attention)
+- Feature engineering provides significant improvements before increasing model complexity.
+- Noise reduction enhances learning stability for household energy data.
+- Bidirectional LSTM captures temporal dependencies more effectively than a conventional LSTM.
+- Combining domain knowledge with deep learning leads to superior forecasting performance.
 
-## 📎 References
+---
 
-- UCI IHEPC Dataset
-- Recent works on LSTM energy forecasting
-- Signal processing (EWMA, IQR)
+# Future Work
+
+Potential extensions of this work include:
+
+- Multi-step forecasting (24-hour and 7-day horizons)
+- Incorporating weather and occupancy information
+- Exploring Transformer-based forecasting models such as the Temporal Fusion Transformer
+- Developing hybrid architectures combining CNN, LSTM, and attention mechanisms
+
+---
+
+# References
+
+- UCI Individual Household Electric Power Consumption Dataset
+- Recent studies on deep learning for energy forecasting
+- Research on signal processing techniques including EWMA and IQR-based outlier detection
