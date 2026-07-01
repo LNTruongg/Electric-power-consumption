@@ -166,7 +166,7 @@ The proposed stacked Bidirectional LSTM consistently outperformed the baseline L
 
 ---
 ## 
-![Correlation Heatmap](ouput/output.png)
+![Correlation Heatmap](ouput/output_.png)
 
 # Ablation Study
 
@@ -210,7 +210,7 @@ To prevent data leakage, the following validation strategy was adopted.
 
 ---
 ## 
-![Correlation Heatmap](ouput/output_.png)
+![Correlation Heatmap](ouput/output.png)
 
 # Deployment Considerations
 
