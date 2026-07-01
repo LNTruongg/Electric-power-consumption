@@ -19,6 +19,10 @@ To improve forecasting performance, the pipeline incorporates an advanced prepro
 **Original Size:** Approximately 2 million minute-level observations
 
 The dataset was resampled to hourly intervals before model development.
+## Scatter Plot
+
+![Scatter Plot](output/scatter%20plot.png)
+
 
 ### Input Variables
 
