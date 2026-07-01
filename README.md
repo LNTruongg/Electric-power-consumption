@@ -165,6 +165,8 @@ Model performance was evaluated using the following regression metrics.
 The proposed stacked Bidirectional LSTM consistently outperformed the baseline LSTM across all evaluation metrics.
 
 ---
+## 
+![Correlation Heatmap](ouput/output.png)
 
 # Ablation Study
 
@@ -207,6 +209,8 @@ To prevent data leakage, the following validation strategy was adopted.
 - Purged cross-validation with a 24-hour gap
 
 ---
+## 
+![Correlation Heatmap](ouput/output_.png)
 
 # Deployment Considerations
 
