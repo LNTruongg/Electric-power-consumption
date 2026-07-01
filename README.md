@@ -20,7 +20,8 @@ To improve forecasting performance, the pipeline incorporates an advanced prepro
 
 The dataset was resampled to hourly intervals before model development.
 ## Correlation Heatmap
-![Correlation Heatmap](output/Heatmap.png)
+![Correlation Heatmap](ouput/Heatmap.png)
+
 ## Scatter Plot
 ![Scatter Plot](ouput/scatterplot.png)
 
