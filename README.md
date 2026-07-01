@@ -21,7 +21,7 @@ To improve forecasting performance, the pipeline incorporates an advanced prepro
 The dataset was resampled to hourly intervals before model development.
 ## Scatter Plot
 
-![Scatter Plot](output/scatter%20plot.png)
+![Scatter Plot](ouput/scatterplot.png)
 
 
 ### Input Variables
