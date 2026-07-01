@@ -8,10 +8,6 @@ This project presents an end-to-end deep learning pipeline for **one-hour-ahead 
 
 To improve forecasting performance, the pipeline incorporates an advanced preprocessing workflow, including **Interquartile Range (IQR)** outlier removal, **Exponential Weighted Moving Average (EWMA)** denoising, and temporal feature engineering through lag features (1-hour, 24-hour, and 168-hour). A stacked Bi-LSTM architecture is then trained to effectively capture both short-term and long-term temporal dependencies in household electricity consumption.
 
-Experimental results demonstrate that the proposed model significantly outperforms a baseline LSTM model, achieving an **R² score of 0.6688** and an **RMSE of 0.3877 kW**, representing approximately **25.5% improvement in prediction accuracy**. The Bidirectional LSTM architecture effectively mitigates phase lag, while the preprocessing and feature engineering techniques substantially reduce prediction errors.
-
-The resulting forecasting framework provides an efficient and practical solution for **smart grid applications**, **demand response**, and **home energy management systems**, offering high predictive accuracy with computational efficiency suitable for real-world deployment.
-
 ---
 
 # Dataset
